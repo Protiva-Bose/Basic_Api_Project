@@ -1,6 +1,8 @@
 import 'package:basic_api_project/product_list/screens/products_list.dart';
 import 'package:flutter/material.dart';
 
+import 'food_recipes/food_recipe_json_data.dart';
+
 void main() {
   runApp(const ApiBasicApp());
 }
@@ -15,7 +17,7 @@ class ApiBasicApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home:  ProductsList(),
+      home:  RecipeScreen(),
     );
   }
 }

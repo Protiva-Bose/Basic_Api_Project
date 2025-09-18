@@ -111,7 +111,7 @@ class _AddProductsState extends State<AddProducts> {
     int totalPrice =
         int.parse(_uniPriceController.text) *
         int.parse(_quantityController.text);
-    Map<String, dynamic> requesrBody = {
+    Map<String, dynamic> requestBody = {
       "ProductName": _productNameController.text,
       "ProductCode": int.parse(_productCodeController.text),
       "Img": _imageUrlController.text,
@@ -123,7 +123,7 @@ class _AddProductsState extends State<AddProducts> {
     Response response = await post(
       uri,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(requesrBody),
+      body: jsonEncode(requestBody),
     );
     print(response.statusCode);
     print(response.body);
