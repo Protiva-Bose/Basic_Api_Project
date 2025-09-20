@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:basic_api_project/view/post_Api/get_post_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -308,6 +309,14 @@ class _RandomUserState extends State<RandomUser> {
           return Divider();
         },
         itemCount: user.length,
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => GetPostData()),
+        );
+      },
+        child: Icon(Icons.arrow_right),
       ),
     );
   }
