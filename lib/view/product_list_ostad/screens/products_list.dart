@@ -1,5 +1,4 @@
-import 'package:basic_api_project/product_list/screens/product_item.dart';
-import 'package:basic_api_project/product_list/screens/update_product.dart';
+import 'package:basic_api_project/view/product_list_ostad/screens/product_item.dart';
 import 'package:flutter/material.dart';
 
 import 'add_products.dart';

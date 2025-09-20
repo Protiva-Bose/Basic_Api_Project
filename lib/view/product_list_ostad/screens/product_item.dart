@@ -1,4 +1,4 @@
-import 'package:basic_api_project/product_list/screens/update_product.dart';
+import 'package:basic_api_project/view/product_list_ostad/screens/update_product.dart';
 import 'package:flutter/material.dart';
 class ProductItem extends StatelessWidget {
   const ProductItem({
