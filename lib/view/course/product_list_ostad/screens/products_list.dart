@@ -1,4 +1,4 @@
-import 'package:basic_api_project/view/product_list_ostad/screens/product_item.dart';
+import 'package:basic_api_project/view/course/product_list_ostad/screens/product_item.dart';
 import 'package:flutter/material.dart';
 
 import 'add_products.dart';

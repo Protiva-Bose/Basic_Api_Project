@@ -86,3 +86,12 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 }
+
+//final List jsonData = jsonDecode(response.body);
+// users = jsonData.map((item) => User.fromJson(item)).toList().cast<User>();
+
+
+//final Map<String, dynamic> jsonData = jsonDecode(response.body);
+// users = (jsonData['results'] as List)
+//     .map((item) => User.fromJson(item))
+//     .toList();
