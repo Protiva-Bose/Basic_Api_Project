@@ -1,5 +1,7 @@
+import 'package:basic_api_project/view/course/food_recipes_ostad/food_recipe_json_data.dart';
 import 'package:basic_api_project/view/get_api/user_details_get/User_details.dart';
 import 'package:flutter/material.dart';
+import 'flutter_map/flutter_map.dart';
 
 void main() {
   runApp(const ApiBasicApp());
@@ -16,7 +18,7 @@ class ApiBasicApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home:  UserDetails(),
+      home: RecipeScreen(),
     );
   }
 }
