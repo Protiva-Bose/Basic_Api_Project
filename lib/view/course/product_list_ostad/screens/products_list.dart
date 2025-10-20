@@ -1,13 +1,10 @@
 import 'dart:convert';
-
-import 'package:basic_api_project/product_list/screens/product_item.dart';
-import 'package:basic_api_project/product_list/screens/update_product.dart';
 import 'package:basic_api_project/product_list/utils/urls/url.dart';
+import 'package:basic_api_project/view/course/product_list_ostad/screens/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-
+import '../../../../product_list/screens/models/product_list_model/product_list.dart';
 import 'add_products.dart';
-import 'models/product_list_model/product_list.dart';
 
 class ProductsList extends StatefulWidget {
   const ProductsList({super.key});

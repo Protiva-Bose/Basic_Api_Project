@@ -1,8 +1,7 @@
-import 'package:basic_api_project/product_list/screens/products_list.dart';
+import 'package:basic_api_project/view/course/food_recipes_ostad/food_recipe_json_data.dart';
+import 'package:basic_api_project/view/get_api/user_details_get/User_details.dart';
 import 'package:flutter/material.dart';
-
 import 'flutter_map/flutter_map.dart';
-import 'food_recipes/food_recipe_json_data.dart';
 
 void main() {
   runApp(const ApiBasicApp());
@@ -14,6 +13,7 @@ class ApiBasicApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

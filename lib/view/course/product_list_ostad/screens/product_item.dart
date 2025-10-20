@@ -1,5 +1,5 @@
+import 'package:basic_api_project/view/course/product_list_ostad/screens/update_product.dart';
 import 'package:basic_api_project/product_list/screens/models/product_list_model/product_list.dart';
-import 'package:basic_api_project/product_list/screens/update_product.dart';
 import 'package:flutter/material.dart';
 class ProductItem extends StatelessWidget {
    ProductItem({
