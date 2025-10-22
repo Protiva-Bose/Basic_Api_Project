@@ -1,17 +1,15 @@
-import 'package:basic_api_project/cors/routes/route_names.dart';
-import 'package:basic_api_project/view/course/module_20_assignment/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+class UpdateProfileScreen extends StatefulWidget {
+  const UpdateProfileScreen({super.key});
 
   @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
+  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -31,7 +29,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _isLoading = true;
     });
 
-    const String apiUrl = 'http://35.73.30.144:2005/api/v1/Registration';
+    const String apiUrl = 'http://35.73.30.144:2005/api/v1/ProfileUpdate';
 
     try {
 
@@ -55,9 +53,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           responseData['data'] ?? 'An unknown error occurred.';
 
       if (response.statusCode == 200 || response.statusCode == 201 && status == 'success') {
-        _showSnackbar('Registration Successful!', Colors.green);
+        _showSnackbar('Profile Updated Successful!', Colors.green);
       } else {
-        _showSnackbar('Registration Failed: $message', Colors.red);
+        _showSnackbar('Profile Updated Failed: $message', Colors.red);
       }
     } catch (e) {
       _showSnackbar('Network Error: Could not connect to server.', Colors.red);
@@ -80,11 +78,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget _buildInputField(
-    String label,
-    TextEditingController controller, {
-    bool obscureText = false,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
+      String label,
+      TextEditingController controller, {
+        bool obscureText = false,
+        TextInputType keyboardType = TextInputType.text,
+      }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
@@ -143,13 +141,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                 Column(
                   children: [
-                   Image.asset('assets/icons/splash_pic.png',scale: 10,),
+                    Image.asset('assets/icons/splash_pic.png',scale: 10,),
                   ],
                 ),
                 const SizedBox(height: 20),
 
                 const Text(
-                  'Create new account',
+                  'Update Profile Details',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
@@ -194,38 +192,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   child: _isLoading
                       ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 3,
-                          ),
-                        )
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  )
                       : const Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                ),
-
-                const SizedBox(height: 24),
-
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  },
-                  child: const Text(
-                    'Already registered? Sign In',
+                    'Continue',
                     style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
                     ),
                   ),
                 ),

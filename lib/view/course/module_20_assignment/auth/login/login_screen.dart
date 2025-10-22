@@ -1,9 +1,12 @@
-import 'package:basic_api_project/view/course/module_20_assignment/registration/registration_screen.dart';
+import 'dart:developer';
+
+import 'package:basic_api_project/cors/service/token_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../profile_details/profile_screen.dart';
+import '../../profile/profile_details/profile_screen.dart';
+import '../registration/registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,7 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
         'password': _passwordController.text.trim(),
       };
 
-      final http.Response response = await http.post(
+      log(requestBody.toString());
+
+      final response = await http.post(
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(requestBody),
@@ -48,12 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         _showSnackbar('Login Successful! Welcome back.', Colors.green);
+        TokenService.setToken(responseData["token"]);
+        //log("token: ${await TokenService.getToken()}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => ProfileScreen()),
         );
 
-        print('User data: $responseData');
+        log('response: $responseData');
       }
       else if (response.statusCode == 400 || response.statusCode == 401) {
         final Map<String, dynamic> errorData = jsonDecode(response.body);
