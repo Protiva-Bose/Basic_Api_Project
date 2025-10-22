@@ -338,6 +338,7 @@ class _UserTaskHomePageState extends State<UserTaskHomePage> {
                 }
               )
             ),
+            SizedBox(height: 60,),
           ],
         ),
       ),
@@ -350,12 +351,13 @@ class _UserTaskHomePageState extends State<UserTaskHomePage> {
         child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        margin: const EdgeInsets.only(bottom: 30),
+        padding: const EdgeInsets.symmetric(vertical: 30),
         decoration: const BoxDecoration(
           color: Colors.white,
           border: Border(top: BorderSide(color: Colors.black12, width: 0.5)),
         ),
-        child: Row(
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildBottomActionItem(Icons.new_label_outlined, 'New', isSelected: true),
