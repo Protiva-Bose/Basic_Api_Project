@@ -1,7 +1,34 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:basic_api_project/view/course/module_20_assignment/profile/profile_details/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import '../../../../cors/service/token_service.dart';
 
-class UserTaskHomePage extends StatelessWidget {
+class UserTaskHomePage extends StatefulWidget {
   const UserTaskHomePage({super.key});
+
+  @override
+  State<UserTaskHomePage> createState() => _UserTaskHomePageState();
+}
+
+class _UserTaskHomePageState extends State<UserTaskHomePage> {
+
+  dynamic TaskData;
+  String statusTask = "New";
+
+  initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  Future<void> _loadTasks() async {
+    final data = await fetchStatusWiseTask(statusTask);
+    setState(() {
+      TaskData = data;
+    });
+  }
 
   Widget _buildCustomHeader(BuildContext context) {
     return Container(
@@ -12,15 +39,18 @@ class UserTaskHomePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 2),
+              GestureDetector(
+                onTap: (){Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileScreen()));},
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                  child: const Icon(Icons.face, color: Colors.blueAccent),
                 ),
-                child: const Icon(Icons.add_task, color: Colors.blueAccent),
               ),
               const SizedBox(width: 12),
               const Column(
@@ -44,7 +74,7 @@ class UserTaskHomePage extends StatelessWidget {
   }
 
   // 3. Task Card
-  Widget _buildTaskCard() {
+  Widget _buildTaskCard(String title, String description, String status, String date) {
     return Card(
       margin: const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
       color: Colors.white,
@@ -57,25 +87,25 @@ class UserTaskHomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'homework',
+             Text(
+              title,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'Flutter homework',
+             Text(
+              description,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Date: 2025-10-02T06:21:45.327Z',
-              style: TextStyle(
+            Text(
+              'Date: $date',
+              style: const TextStyle(
                 fontSize: 14,
                 color: Colors.black54,
               ),
@@ -94,8 +124,8 @@ class UserTaskHomePage extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   ),
-                  child: const Text(
-                    'New',
+                  child: Text(
+                    status,
                     style: TextStyle(
                       color: Colors.blueAccent,
                       fontWeight: FontWeight.bold,
@@ -150,6 +180,209 @@ class UserTaskHomePage extends StatelessWidget {
     );
   }
 
+  ///DIALOUGE
+  void _showAddItemDialog(BuildContext context) {
+    final _titleController = TextEditingController();
+    final _descriptionController = TextEditingController();
+    String _status = 'New'; // default status
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add New Item'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _titleController,
+                  decoration: InputDecoration(labelText: 'Title'),
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(labelText: 'Description'),
+                ),
+                DropdownButtonFormField<String>(
+                  value: _status,
+                  items: ['New', 'In Progress', 'Completed']
+                      .map((status) => DropdownMenuItem(
+                    value: status,
+                    child: Text(status),
+                  ))
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      _status = value;
+                    }
+                  },
+                  decoration: InputDecoration(labelText: 'Status'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final success = await createTask(
+                _titleController.text,
+                _descriptionController.text,
+                _status,
+              );
+
+              if (success) {
+                // Refresh the task list
+                final updatedData = await fetchStatusWiseTask(_status);
+                setState(() {
+                  TaskData = updatedData;
+                });
+              }
+
+              Navigator.pop(context);
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showUpdateItemDialog(BuildContext context) {
+    final _titleController = TextEditingController();
+    final _descriptionController = TextEditingController();
+    String _status = 'New'; // default status
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add New Item'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _titleController,
+                  decoration: InputDecoration(labelText: 'Title'),
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(labelText: 'Description'),
+                ),
+                DropdownButtonFormField<String>(
+                  value: _status,
+                  items: ['New', 'Progress', 'Completed', "Cancelled"]
+                      .map((status) => DropdownMenuItem(
+                    value: status,
+                    child: Text(status),
+                  ))
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      _status = value;
+                    }
+                  },
+                  decoration: InputDecoration(labelText: 'Status'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final success = await createTask(
+                _titleController.text,
+                _descriptionController.text,
+                _status,
+              );
+
+              if (success) {
+                // Refresh the task list
+                final updatedData = await fetchStatusWiseTask(_status);
+                setState(() {
+                  TaskData = updatedData;
+                });
+              }
+
+              Navigator.pop(context);
+              },
+              child: Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> createTask(String title, String description, String status) async {
+    const String url = "http://35.73.30.144:2005/api/v1/createTask";
+    final token = await TokenService.getToken();
+
+    if (token == null) return false;
+
+    final itemData = {
+      "title": title,
+      "description": description,
+      "status": status,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "token": token,
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(itemData),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final jsonResponse = jsonDecode(response.body);
+        log(jsonResponse.toString());
+        return true; // Task created successfully
+      } else {
+        log("Error creating task: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      log("Exception creating task: $e");
+      return false;
+    }
+  }
+
+
+  Future<dynamic> fetchStatusWiseTask(String status) async {
+    String url = "http://35.73.30.144:2005/api/v1/listTaskByStatus/$status";
+    final token = await TokenService.getToken();
+
+    if (token == null) return null;
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {"token": token},
+      );
+      final jsonResponse = jsonDecode(response.body);
+      log(jsonResponse.toString());
+      if (response.statusCode == 200) {
+        return jsonResponse['data'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,19 +391,25 @@ class UserTaskHomePage extends StatelessWidget {
           children: [
             _buildCustomHeader(context),
             Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  _buildTaskCard(),
-                  const SizedBox(height: 100),
-                ],
-              ),
+              child: ListView.builder(
+                itemCount: TaskData?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return _buildTaskCard(
+                    TaskData?[index]['title'] ?? "N/A",
+                    TaskData?[index]['description'] ?? "N/A",
+                    TaskData?[index]['status'] ?? "N/A",
+                    TaskData?[index]['date'] ?? "N/A",
+                  );
+                }
+              )
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _showAddItemDialog(context);
+        },
         backgroundColor: Colors.blueAccent,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 30),

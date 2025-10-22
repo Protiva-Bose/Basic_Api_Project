@@ -29,7 +29,7 @@ class ApiBasicApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
-          home: UserTaskHomePage(),
+          home: SplashScreen(),
         );
       }
     );
