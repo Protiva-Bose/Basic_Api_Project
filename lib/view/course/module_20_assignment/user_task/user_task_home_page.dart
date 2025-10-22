@@ -16,14 +16,13 @@ class UserTaskHomePage extends StatefulWidget {
 class _UserTaskHomePageState extends State<UserTaskHomePage> {
 
   dynamic TaskData;
-  String statusTask = "New";
 
   initState() {
     super.initState();
-    _loadTasks();
+    _loadTasks("New");
   }
 
-  Future<void> _loadTasks() async {
+  Future<void> _loadTasks(String statusTask) async {
     final data = await fetchStatusWiseTask(statusTask);
     setState(() {
       TaskData = data;
@@ -154,33 +153,39 @@ class _UserTaskHomePageState extends State<UserTaskHomePage> {
     final Color color = isSelected ? Colors.blueAccent : Colors.grey;
     final Color bgColor = isSelected ? Colors. white70 : Colors.transparent;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(25),
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          _loadTasks(label);
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Icon(icon, color: color, size: 24),
             ),
-            child: Icon(icon, color: color, size: 24),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: color,
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: color,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  ///DIALOUGE
   void _showAddItemDialog(BuildContext context) {
     final _titleController = TextEditingController();
     final _descriptionController = TextEditingController();
@@ -205,7 +210,7 @@ class _UserTaskHomePageState extends State<UserTaskHomePage> {
                 ),
                 DropdownButtonFormField<String>(
                   value: _status,
-                  items: ['New', 'In Progress', 'Completed']
+                  items: ['New', 'Progress', 'Completed', 'Cancelled']
                       .map((status) => DropdownMenuItem(
                     value: status,
                     child: Text(status),
@@ -244,77 +249,7 @@ class _UserTaskHomePageState extends State<UserTaskHomePage> {
 
               Navigator.pop(context);
               },
-              child: Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-  void _showUpdateItemDialog(BuildContext context) {
-    final _titleController = TextEditingController();
-    final _descriptionController = TextEditingController();
-    String _status = 'New'; // default status
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Add New Item'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: _titleController,
-                  decoration: InputDecoration(labelText: 'Title'),
-                ),
-                TextField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(labelText: 'Description'),
-                ),
-                DropdownButtonFormField<String>(
-                  value: _status,
-                  items: ['New', 'Progress', 'Completed', "Cancelled"]
-                      .map((status) => DropdownMenuItem(
-                    value: status,
-                    child: Text(status),
-                  ))
-                      .toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      _status = value;
-                    }
-                  },
-                  decoration: InputDecoration(labelText: 'Status'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final success = await createTask(
-                _titleController.text,
-                _descriptionController.text,
-                _status,
-              );
-
-              if (success) {
-                // Refresh the task list
-                final updatedData = await fetchStatusWiseTask(_status);
-                setState(() {
-                  TaskData = updatedData;
-                });
-              }
-
-              Navigator.pop(context);
-              },
-              child: Text('Update'),
+              child: Text('Add'),
             ),
           ],
         );
@@ -398,7 +333,7 @@ class _UserTaskHomePageState extends State<UserTaskHomePage> {
                     TaskData?[index]['title'] ?? "N/A",
                     TaskData?[index]['description'] ?? "N/A",
                     TaskData?[index]['status'] ?? "N/A",
-                    TaskData?[index]['date'] ?? "N/A",
+                    TaskData?[index]['createdDate'] ?? "N/A",
                   );
                 }
               )
