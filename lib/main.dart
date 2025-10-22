@@ -1,7 +1,9 @@
 import 'package:basic_api_project/view/course/food_recipes_ostad/food_recipe_json_data.dart';
 import 'package:basic_api_project/view/course/module_20_assignment/auth/otp/otp_verify.dart';
 import 'package:basic_api_project/view/course/module_20_assignment/profile/profile_details/profile_screen.dart';
+import 'package:basic_api_project/view/course/module_20_assignment/profile/update_profile/update_profile_screen.dart';
 import 'package:basic_api_project/view/course/module_20_assignment/splash/splash_screen.dart';
+import 'package:basic_api_project/view/course/module_20_assignment/user_task/user_task_home_page.dart';
 import 'package:basic_api_project/view/get_api/user_details_get/User_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +29,7 @@ class ApiBasicApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
-          home: SplashScreen(),
+          home: UserTaskHomePage(),
         );
       }
     );
