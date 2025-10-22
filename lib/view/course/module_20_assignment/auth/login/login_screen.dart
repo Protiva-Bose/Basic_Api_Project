@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:convert';
 
 import 'package:basic_api_project/cors/service/token_service.dart';
+import 'package:basic_api_project/view/course/module_20_assignment/user_task/user_task_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -88,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ProfileScreen()),
+          MaterialPageRoute(builder: (context) => UserTaskHomePage()),
         );
       } else {
         _showSnackbar(
